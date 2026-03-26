@@ -1,0 +1,42 @@
+# ─────────────────────────────────────────────────────────
+#  Backlink Hunter — configuration template
+#  Copy this file to config.yaml and fill in your details.
+#  You can also fill everything in via the Settings tab in
+#  the web UI (python app.py → http://localhost:5002).
+# ─────────────────────────────────────────────────────────
+
+target:
+  domain: "yoursite.com"            # bare domain, no https://
+  url: "https://yoursite.com"
+  name: "Your Brand Name"
+  description: "One-sentence description of what your site does."
+
+niche:
+  primary: "digital marketing"      # e.g. "SaaS", "home fitness", "cybersecurity"
+  keywords:
+    - "content marketing"
+    - "SEO tools"
+    - "email marketing"
+
+competitors:
+  - domain: "competitor1.com"
+    name: "Competitor One"
+  - domain: "competitor2.com"
+    name: "Competitor Two"
+
+outreach:
+  sender_name: "Jane Smith"
+  sender_email: "jane@yoursite.com"
+  sender_title: "Head of Content"   # optional — leave blank to omit from sign-offs
+
+scraper:
+  max_results_per_strategy: 30      # reduce to 10–15 for a quick test run
+  request_delay_seconds: 2
+  timeout_seconds: 10
+  check_broken_links: true
+  user_agent: "Mozilla/5.0 (compatible; BacklinkHunter/1.0)"
+
+output:
+  directory: output
+  csv_filename: backlink_opportunities.csv
+  email_drafts_filename: outreach_emails.csv
