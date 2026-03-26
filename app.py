@@ -217,13 +217,35 @@ def analyse_site():
         import tldextract
         import re as _re
 
-        headers = {"User-Agent": "Mozilla/5.0 (compatible; BacklinkHunter/1.0)"}
-        timeout = 12
+        _browser_headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/124.0.0.0 Safari/537.36"
+            ),
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Connection": "keep-alive",
+            "Upgrade-Insecure-Requests": "1",
+            "Cache-Control": "max-age=0",
+        }
+        timeout = 15
 
         def fetch(u):
             try:
-                r = req.get(u, headers=headers, timeout=timeout, allow_redirects=True)
-                return r.text if r.status_code == 200 else None
+                r = req.get(u, headers=_browser_headers, timeout=timeout,
+                            allow_redirects=True)
+                if r.status_code < 400:
+                    return r.text
+                # Some sites return 406 for bots — retry without Accept-Encoding
+                if r.status_code == 406:
+                    r2 = req.get(u, headers={**_browser_headers,
+                                             "Accept": "text/html,*/*;q=0.9",
+                                             "Accept-Encoding": "identity"},
+                                 timeout=timeout, allow_redirects=True)
+                    return r2.text if r2.status_code < 400 else None
+                return None
             except Exception:
                 return None
 
